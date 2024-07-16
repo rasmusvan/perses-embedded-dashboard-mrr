@@ -22,12 +22,18 @@ import {
   TemplateVariableProvider,
 } from "@perses-dev/dashboards";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TimeRangeProvider } from "@perses-dev/plugin-system";
+import {
+  TimeRangeProvider,
+  PluginRegistry,
+  PluginRegistryProps,
+  DataQueriesProvider,
+} from "@perses-dev/plugin-system";
+import { PrometheusTimeSeriesQuery } from "@perses-dev/prometheus-plugin";
 
 class DatasourceApiImpl implements DatasourceApi {
   getDatasource(): Promise<ProjectDatasource | undefined> {
     return Promise.resolve(undefined);
-  }
+  } 
 
   getGlobalDatasource(): Promise<GlobalDatasource | undefined> {
     return Promise.resolve(fakeDatasource);
@@ -58,55 +64,79 @@ const fakeDatasource: GlobalDatasource = {
   },
 };
 
-const fakeDashboard: DashboardResource = {
-  kind: "Dashboard",
-  metadata: {
-    name: "test-dash",
-    project: "rasmus-en",
-  },
-  spec: {
-    duration: "4m",
-    variables: [],
-    layouts: [
-      {
-        kind: "Grid",
-        spec: {
-          items: [
-            {
-              x: 0,
-              y: 0,
-              width: 6,
-              height: 6,
-              content: {
-                $ref: "#/spec/panels/test",
-              },
-            },
-          ],
-        },
-      },
-    ],
-    panels: {
-      Test1: {
-        kind: "Panel",
-        spec: {
-          display: {
-            name: "test-panel",
-          },
-          plugin: {
-            kind: "PrometheusTimeSeriesQuery",
-            spec: {
-              datasource: {
-                kind: "PrometheusDatasource",
-                name: "fake-datasource",
-              },
-              query: "container_cpu_usage_seconds_total",
-            },
-          },
-        },
-      },
+const fakeDashboard: DashboardResource =
+  {
+    kind: "Dashboard",
+    metadata: {
+      name: "aaaaa",
+      createdAt: "2024-07-11T13:26:14.424469171Z",
+      updatedAt: "2024-07-11T13:26:14.424469171Z",
+      version: 0,
+      project: "rasmus-en",
     },
-  },
-};
+    spec: {
+      display: {
+        name: "aaaaa",
+      },
+      panels: {
+        Test: {
+          kind: "Panel",
+          spec: {
+            display: {
+              name: "Test",
+            },
+            plugin: {
+              kind: "TimeSeriesChart",
+              spec: {},
+            },
+            queries: [
+              {
+                kind: "TimeSeriesQuery",
+                spec: {
+                  plugin: {
+                    kind: "PrometheusTimeSeriesQuery",
+                    spec: {
+                      datasource: {
+                        kind: "PrometheusDatasource",
+                        name: "fake-datasource",
+                      },
+                      query: "  container_cpu_usage_seconds_total",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+      layouts: [
+        {
+          kind: "Grid",
+          spec: {
+            display: {
+              title: "Panel Group",
+              collapse: {
+                open: true,
+              },
+            },
+            items: [
+              {
+                x: 0,
+                y: 0,
+                width: 12,
+                height: 6,
+                content: {
+                  $ref: "#/spec/panels/Test",
+                },
+              },
+            ],
+          },
+        },
+      ],
+      duration: "1h",
+      variables: [],
+    },
+  };
 
 const dashboardStoreProps: DashboardStoreProps = {
   dashboardResource: fakeDashboard,
@@ -153,6 +183,13 @@ export const WorkloadPersesTab: React.FC = ({}) => {
     },
   });
 
+  const pluginRegistryProps: PluginRegistryProps = {
+    pluginLoader: {
+      getInstalledPlugins: () => Promise.resolve([]),
+      importPluginModule: (resource) => Promise.resolve(undefined),
+    },
+  };
+
   return (
     <>
       <ThemeProvider theme={muiTheme}>
@@ -168,14 +205,16 @@ export const WorkloadPersesTab: React.FC = ({}) => {
                 timeRange={{ pastDuration: "30m" }}
               >
                 <TemplateVariableProvider>
-                  <DatasourceStoreProvider
-                    dashboardResource={fakeDashboard}
-                    datasourceApi={fakeDatasourceApi}
-                  >
-                    <DashboardProvider {...dashboardProviderProps}>
-                      <Dashboard {...dashboardProps} />
-                    </DashboardProvider>
-                  </DatasourceStoreProvider>
+                  <PluginRegistry {...pluginRegistryProps}>
+                    <DatasourceStoreProvider
+                      dashboardResource={fakeDashboard}
+                      datasourceApi={fakeDatasourceApi}
+                    >
+                      <DashboardProvider {...dashboardProviderProps}>
+                        <Dashboard {...dashboardProps} />
+                      </DashboardProvider>
+                    </DatasourceStoreProvider>
+                  </PluginRegistry>
                 </TemplateVariableProvider>
               </TimeRangeProvider>
             </QueryClientProvider>
