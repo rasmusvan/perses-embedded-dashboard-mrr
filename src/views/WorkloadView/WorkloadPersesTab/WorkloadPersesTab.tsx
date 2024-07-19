@@ -28,9 +28,8 @@ import {
   PluginModuleResource,
   dynamicImportPluginLoader,
 } from "@perses-dev/plugin-system";
-import prometheusResource from '@perses-dev/prometheus-plugin/plugin.json';
-import panelsResource from '@perses-dev/panels-plugin/plugin.json';
-
+import prometheusResource from "@perses-dev/prometheus-plugin/plugin.json";
+import panelsResource from "@perses-dev/panels-plugin/plugin.json";
 
 class DatasourceApiImpl implements DatasourceApi {
   getDatasource(): Promise<ProjectDatasource | undefined> {
@@ -61,6 +60,57 @@ const fakeDatasource: GlobalDatasource = {
       kind: "PrometheusDatasource",
       spec: {
         directUrl: "https://prometheus.demo.do.prometheus.io",
+      },
+    },
+  },
+};
+
+const fakeDatasource1: GlobalDatasource = {
+  kind: "GlobalDatasource",
+  metadata: {
+    name: "fake-datasource",
+  },
+  spec: {
+    display: {
+      name: "Fake datasource",
+    },
+    default: true,
+    plugin: {
+      kind: "PrometheusDatasource",
+      spec: {
+        proxy: {
+          kind: "HTTPProxy",
+          spec: {
+            allowedEndpoints: [
+              {
+                endpointPattern: "/api/v1/labels",
+                method: "POST",
+              },
+              {
+                endpointPattern: "/api/v1/series",
+                method: "POST",
+              },
+              {
+                endpointPattern: "/api/v1/metadata",
+                method: "GET",
+              },
+              {
+                endpointPattern: "/api/v1/query",
+                method: "POST",
+              },
+              {
+                endpointPattern: "/api/v1/query_range",
+                method: "POST",
+              },
+              {
+                endpointPattern: "/api/v1/label/([a-zA-Z0-9_-]+)/values",
+                method: "GET",
+              },
+            ],
+            url: "https://prometheus.demo.do.prometheus.io",
+          },
+        },
+        scrapeInterval: "15s",
       },
     },
   },
@@ -179,15 +229,14 @@ export const WorkloadPersesTab: React.FC = () => {
     },
   });
 
-
   const pluginLoader = dynamicImportPluginLoader([
     {
       resource: prometheusResource as PluginModuleResource,
-      importPlugin: () => import('@perses-dev/prometheus-plugin'),
+      importPlugin: () => import("@perses-dev/prometheus-plugin"),
     },
     {
       resource: panelsResource as PluginModuleResource,
-      importPlugin: () => import('@perses-dev/panels-plugin'),
+      importPlugin: () => import("@perses-dev/panels-plugin"),
     },
   ]);
 
