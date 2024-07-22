@@ -113,7 +113,7 @@ const fakeDatasource: GlobalDatasource = {
               },
             ],
             headers: {
-              Authorization: `Bearer ${token}`, // reach out to me via app.element.io/matrix for the token
+              Authorization: `Bearer ${token}`, // reach out to me via app.element.io/matrix for the token. @enrasmus:matrix.org
             },
           },
         },
