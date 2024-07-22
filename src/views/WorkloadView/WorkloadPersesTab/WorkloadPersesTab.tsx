@@ -47,11 +47,15 @@ class DatasourceApiImpl implements DatasourceApi {
   listGlobalDatasources(): Promise<GlobalDatasource[]> {
     return Promise.resolve([fakeDatasource]);
   }
+  
+  buildProxyUrl(): string {
+    return "/perses";
+  }
 }
 
 export const fakeDatasourceApi = new DatasourceApiImpl();
 
-const fakeDatasource: GlobalDatasource = {
+const fakeDatasource1: GlobalDatasource = {
   kind: "GlobalDatasource",
   metadata: { name: "fake-datasource" },
   spec: {
@@ -65,15 +69,16 @@ const fakeDatasource: GlobalDatasource = {
   },
 };
 
-const fakeDatasource1: GlobalDatasource = {
+const fakeDatasource: GlobalDatasource = {
   kind: "GlobalDatasource",
   metadata: {
     name: "fake-datasource",
+    createdAt: "2024-07-17T11:32:41.925800718Z",
+    updatedAt: "2024-07-19T13:23:53.410325637Z",
+    version: 2,
   },
   spec: {
-    display: {
-      name: "Fake datasource",
-    },
+    display: {},
     default: true,
     plugin: {
       kind: "PrometheusDatasource",
@@ -107,86 +112,90 @@ const fakeDatasource1: GlobalDatasource = {
                 method: "GET",
               },
             ],
-            url: "https://prometheus.demo.do.prometheus.io",
+            headers: {
+              Authorization: `Bearer ${token}`, // reach out to me via app.element.io/matrix for the token
+            },
           },
         },
-        scrapeInterval: "15s",
       },
     },
   },
 };
 
 const fakeDashboard: DashboardResource = {
-  kind: "Dashboard",
-  metadata: {
-    name: "aaaaa",
-    project: "rasmus-en",
-    createdAt: "2024-07-11T13:26:14.424469171Z",
-    updatedAt: "2024-07-11T13:26:14.424469171Z",
-    version: 0,
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "test_dash",
+    "project": "test_project",
   },
-  spec: {
-    duration: "1h",
-    variables: [],
-    display: {
-      name: "aaaaa",
-    },
-    panels: {
-      Test: {
-        kind: "Panel",
-        spec: {
-          display: {
-            name: "Test",
+  "spec": {
+    "variables": [],
+    "duration": "30m",
+    "panels": {
+      "MemoryUsagebyPod": {
+        "kind": "Panel",
+        "spec": {
+          "display": {
+            "name": "Memory Usage by Pod"
           },
-          plugin: {
-            kind: "TimeSeriesChart",
-            spec: {},
-          },
-          queries: [
-            {
-              kind: "TimeSeriesQuery",
-              spec: {
-                plugin: {
-                  kind: "PrometheusTimeSeriesQuery",
-                  spec: {
-                    datasource: {
-                      kind: "PrometheusDatasource",
-                      name: "fake-datasource",
-                    },
-                    query: "container_cpu_usage_seconds_total",
-                  },
+          "plugin": {
+            "kind": "TimeSeriesChart",
+            "spec": {
+              "yAxis": {
+                "show": true,
+                "label": "",
+                "format": {
+                  "unit": "percent"
                 },
+                "min": 0,
+                "max": 100
               },
-            },
-          ],
-        },
-      },
-    },
-    layouts: [
-      {
-        kind: "Grid",
-        spec: {
-          display: {
-            title: "Panel Group",
-            collapse: {
-              open: true,
-            },
+              "visual": {
+                "lineWidth": 1.5,
+                "areaOpacity": 0.05,
+                "stack": "all"
+              }
+            }
           },
-          items: [
+          "queries": [
             {
-              x: 0,
-              y: 0,
-              width: 24,
-              height: 10,
-              content: {
-                $ref: "#/spec/panels/Test",
-              },
-            },
-          ],
-        },
-      },
-    ],
-  },
+              "kind": "TimeSeriesQuery",
+              "spec": {
+                "plugin": {
+                  "kind": "PrometheusTimeSeriesQuery",
+                  "spec": {
+                    "datasource": {
+                      "kind": "PrometheusDatasource",
+                      "name": "EntigoDatasource"
+                    },
+                    "query": "(sum(container_memory_working_set_bytes{namespace=~'.*', pod=~'test-kk-8c985c758-xgrd7', container=~'.*'}) / \n sum(kube_pod_container_resource_limits{namespace=~'.*', resource='memory', pod=~'test-kk-8c985c758-xgrd7', container=~'.*'})) * 100"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "layouts": [
+      {
+        "kind": "Grid",
+        "spec": {
+          "items": [
+            {
+              "x": 0,
+              "y": 0,
+              "width": 24,
+              "height": 7,
+              "content": {
+                "$ref": "#/spec/panels/MemoryUsagebyPod"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
 };
 
 const dashboardStoreProps: DashboardStoreProps = {
