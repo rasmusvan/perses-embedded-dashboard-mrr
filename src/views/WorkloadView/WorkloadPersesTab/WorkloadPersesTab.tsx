@@ -69,6 +69,8 @@ const fakeDatasource1: GlobalDatasource = {
   },
 };
 
+const podName = "test-kk-8c985c758-xgrd7";
+
 const fakeDatasource: GlobalDatasource = {
   kind: "GlobalDatasource",
   metadata: {
@@ -113,7 +115,7 @@ const fakeDatasource: GlobalDatasource = {
               },
             ],
             headers: {
-              Authorization: `Bearer ${token}`, // reach out to me via app.element.io/matrix for the token. @enrasmus:matrix.org
+              Authorization: `Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3NzE3MDYyMjk5ODU2NzkyMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiMjU4OTU3MTExODUyMTIwMTY4QGRldmVsb3Blci1wb3J0YWwiLCIyNTg5NjIxMjY3MTI5Nzc1MTJAZGV2ZWxvcGVyLXBvcnRhbCIsIjI2MDEwMTI2MjUxNzg0MjY0MkBkZXZlbG9wZXItcG9ydGFsIiwiMjU4OTU2NDY0OTg5NzMyMzQ5Il0sImV4cCI6MTcyMTc2MTA1MCwiZ3JvdXBzIjpbIndlYi1hZG1pbi0yNTg5NTM3NDQyMjg2NzkxNjUiXSwiaWF0IjoxNzIxNzE3ODUwLCJpc3MiOiJodHRwczovL2VudGlnby1kZXYtaWYzdXB6LnppdGFkZWwuY2xvdWQiLCJqdGkiOiJWMl8yNzcxOTYyNjc4NDU2MzkxNTQtYXRfMjc3MTk2MjY3ODQ1NzA0NjkwIiwibmJmIjoxNzIxNzE3ODUwLCJzdWIiOiIyNzA0MDQ5NTc0NDQ3Njk1MzYiLCJ1cm46eml0YWRlbDppYW06b3JnOnByb2plY3Q6MjU4OTU2NDY0OTg5NzMyMzQ5OnJvbGVzIjp7IndlYi1hZG1pbiI6eyIyNTg5NTM3NDQyMjg2NzkxNjUiOiJlbnRpZ28ueml0YWRlbC5jbG91ZCJ9fSwidXJuOnppdGFkZWw6aWFtOm9yZzpwcm9qZWN0OnJvbGVzIjp7IndlYi1hZG1pbiI6eyIyNTg5NTM3NDQyMjg2NzkxNjUiOiJlbnRpZ28ueml0YWRlbC5jbG91ZCJ9fX0.Ho4EnqeEDNzRP1M5ZYi-S9HUaStubH4XuIXkpSotuY0tPEnbbj6BKKyam-cBQBFlZ-6XJ497COUALs5bpgI-yzr2QEMRTKjyyCq7ujh0BUu-8UDT94c1aw-aKQiZTWW7BbLw3emmcIJmUHmOUW_YTrB8hczPOUUu4hIxHWRfkBhrLEdfIwN5jK7WFP1uWvSygkT-sYmrh3A-BcQVBhIhGzG_70Ni2L-7yEPNKWVNm1aI4Bu1sLIkcmhZr1pkGYS7Gj5Qt2ilNVdGhxbem8CTylX0725kf8XZz-0pNO6BuRgMxESNdayk-WbJQYMcYriMgk09v9UEyCvaLgW_gnMA1A`, // reach out to me via app.element.io/matrix for the token. @enrasmus:matrix.org
             },
           },
         },
@@ -168,7 +170,8 @@ const fakeDashboard: DashboardResource = {
                       "kind": "PrometheusDatasource",
                       "name": "EntigoDatasource"
                     },
-                    "query": "(sum(container_memory_working_set_bytes{namespace=~'.*', pod=~'test-kk-8c985c758-xgrd7', container=~'.*'}) / \n sum(kube_pod_container_resource_limits{namespace=~'.*', resource='memory', pod=~'test-kk-8c985c758-xgrd7', container=~'.*'})) * 100"
+                    "query": `(sum(container_memory_working_set_bytes{namespace=~'.*', pod=~'${podName}', container=~'.*'}) / \n sum(kube_pod_container_resource_limits{namespace=~'.*', resource='memory', pod=~'test-kk-8c985c758-xgrd7', container=~'.*'})) * 100`,
+                    "seriesNameFormat": `${podName}`,
                   }
                 }
               }
