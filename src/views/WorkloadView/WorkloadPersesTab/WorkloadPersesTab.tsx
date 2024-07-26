@@ -243,7 +243,7 @@ export const WorkloadPersesTab: React.FC = () => {
   return (
     <>
       <ThemeProvider theme={muiTheme}>
-        <ChartsProvider chartsTheme={chartsTheme} enablePinning={true}>
+        <ChartsProvider chartsTheme={chartsTheme} enablePinning={false}>
           <SnackbarProvider
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             variant="default"
