@@ -140,7 +140,11 @@ const fakeDashboard: DashboardResource = {
           },
           plugin: {
             kind: "TimeSeriesChart",
-            spec: {},
+            spec: {
+              yAxis: {
+                show: false,
+              },
+            },
           },
           queries: [
             {
@@ -176,8 +180,35 @@ const fakeDashboard: DashboardResource = {
             {
               x: 0,
               y: 0,
-              width: 24,
+              width: 11,
               height: 10,
+              content: {
+                $ref: "#/spec/panels/Test",
+              },
+            },
+            {
+              x: 11,
+              y: 0,
+              width: 7,
+              height: 8,
+              content: {
+                $ref: "#/spec/panels/Test",
+              },
+            },
+            {
+              x: 18,
+              y: 0,
+              width: 4,
+              height: 6,
+              content: {
+                $ref: "#/spec/panels/Test",
+              },
+            },
+            {
+              x: 22,
+              y: 0,
+              width: 2,
+              height: 4,
               content: {
                 $ref: "#/spec/panels/Test",
               },
