@@ -57,21 +57,6 @@ export const fakeDatasourceApi = new DatasourceApiImpl();
 
 const fakeDatasource: GlobalDatasource = {
   kind: "GlobalDatasource",
-  metadata: { name: "fake-datasource" },
-  spec: {
-    default: true,
-    plugin: {
-      kind: "PrometheusDatasource",
-      spec: {
-        directUrl: "https://prometheus.demo.do.prometheus.io",
-      },
-    },
-  },
-};
-
-
-const fakeDatasource1: GlobalDatasource = {
-  kind: "GlobalDatasource",
   metadata: {
     name: "fake-datasource",
     createdAt: "2024-07-17T11:32:41.925800718Z",
