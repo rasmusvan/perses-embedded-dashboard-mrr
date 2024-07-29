@@ -55,7 +55,7 @@ class DatasourceApiImpl implements DatasourceApi {
 
 export const fakeDatasourceApi = new DatasourceApiImpl();
 
-const fakeDatasource1: GlobalDatasource = {
+const fakeDatasource: GlobalDatasource = {
   kind: "GlobalDatasource",
   metadata: { name: "fake-datasource" },
   spec: {
@@ -69,9 +69,8 @@ const fakeDatasource1: GlobalDatasource = {
   },
 };
 
-const podName = "test-kk-8c985c758-xgrd7";
 
-const fakeDatasource: GlobalDatasource = {
+const fakeDatasource1: GlobalDatasource = {
   kind: "GlobalDatasource",
   metadata: {
     name: "fake-datasource",
@@ -114,9 +113,6 @@ const fakeDatasource: GlobalDatasource = {
                 method: "GET",
               },
             ],
-            headers: {
-              Authorization: `Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3NzE3MDYyMjk5ODU2NzkyMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiMjU4OTU3MTExODUyMTIwMTY4QGRldmVsb3Blci1wb3J0YWwiLCIyNTg5NjIxMjY3MTI5Nzc1MTJAZGV2ZWxvcGVyLXBvcnRhbCIsIjI2MDEwMTI2MjUxNzg0MjY0MkBkZXZlbG9wZXItcG9ydGFsIiwiMjU4OTU2NDY0OTg5NzMyMzQ5Il0sImV4cCI6MTcyMTc2MTA1MCwiZ3JvdXBzIjpbIndlYi1hZG1pbi0yNTg5NTM3NDQyMjg2NzkxNjUiXSwiaWF0IjoxNzIxNzE3ODUwLCJpc3MiOiJodHRwczovL2VudGlnby1kZXYtaWYzdXB6LnppdGFkZWwuY2xvdWQiLCJqdGkiOiJWMl8yNzcxOTYyNjc4NDU2MzkxNTQtYXRfMjc3MTk2MjY3ODQ1NzA0NjkwIiwibmJmIjoxNzIxNzE3ODUwLCJzdWIiOiIyNzA0MDQ5NTc0NDQ3Njk1MzYiLCJ1cm46eml0YWRlbDppYW06b3JnOnByb2plY3Q6MjU4OTU2NDY0OTg5NzMyMzQ5OnJvbGVzIjp7IndlYi1hZG1pbiI6eyIyNTg5NTM3NDQyMjg2NzkxNjUiOiJlbnRpZ28ueml0YWRlbC5jbG91ZCJ9fSwidXJuOnppdGFkZWw6aWFtOm9yZzpwcm9qZWN0OnJvbGVzIjp7IndlYi1hZG1pbiI6eyIyNTg5NTM3NDQyMjg2NzkxNjUiOiJlbnRpZ28ueml0YWRlbC5jbG91ZCJ9fX0.Ho4EnqeEDNzRP1M5ZYi-S9HUaStubH4XuIXkpSotuY0tPEnbbj6BKKyam-cBQBFlZ-6XJ497COUALs5bpgI-yzr2QEMRTKjyyCq7ujh0BUu-8UDT94c1aw-aKQiZTWW7BbLw3emmcIJmUHmOUW_YTrB8hczPOUUu4hIxHWRfkBhrLEdfIwN5jK7WFP1uWvSygkT-sYmrh3A-BcQVBhIhGzG_70Ni2L-7yEPNKWVNm1aI4Bu1sLIkcmhZr1pkGYS7Gj5Qt2ilNVdGhxbem8CTylX0725kf8XZz-0pNO6BuRgMxESNdayk-WbJQYMcYriMgk09v9UEyCvaLgW_gnMA1A`, // reach out to me via app.element.io/matrix for the token. @enrasmus:matrix.org
-            },
           },
         },
       },
@@ -125,80 +121,70 @@ const fakeDatasource: GlobalDatasource = {
 };
 
 const fakeDashboard: DashboardResource = {
-  "kind": "Dashboard",
-  "metadata": {
-    "name": "test_dash",
-    "project": "test_project",
+  kind: "Dashboard",
+  metadata: {
+    name: "aaaaa",
+    project: "rasmus-en",
+    createdAt: "2024-07-11T13:26:14.424469171Z",
+    updatedAt: "2024-07-11T13:26:14.424469171Z",
+    version: 0,
   },
-  "spec": {
-    "variables": [],
-    "duration": "30m",
-    "panels": {
-      "MemoryUsagebyPod": {
-        "kind": "Panel",
-        "spec": {
-          "display": {
-            "name": "Memory Usage by Pod"
-          },
-          "plugin": {
-            "kind": "TimeSeriesChart",
-            "spec": {
-              "yAxis": {
-                "show": true,
-                "label": "",
-                "format": {
-                  "unit": "percent"
-                },
-                "min": 0,
-                "max": 100
-              },
-              "visual": {
-                "lineWidth": 1.5,
-                "areaOpacity": 0.05,
-                "stack": "all"
-              }
-            }
-          },
-          "queries": [
-            {
-              "kind": "TimeSeriesQuery",
-              "spec": {
-                "plugin": {
-                  "kind": "PrometheusTimeSeriesQuery",
-                  "spec": {
-                    "datasource": {
-                      "kind": "PrometheusDatasource",
-                      "name": "EntigoDatasource"
-                    },
-                    "query": `(sum(container_memory_working_set_bytes{namespace=~'.*', pod=~'${podName}', container=~'.*'}) / \n sum(kube_pod_container_resource_limits{namespace=~'.*', resource='memory', pod=~'test-kk-8c985c758-xgrd7', container=~'.*'})) * 100`,
-                    "seriesNameFormat": `${podName}`,
-                  }
-                }
-              }
-            }
-          ]
-        }
-      }
+  spec: {
+    duration: "1h",
+    variables: [],
+    display: {
+      name: "aaaaa",
     },
-    "layouts": [
-      {
-        "kind": "Grid",
-        "spec": {
-          "items": [
+    panels: {
+      Test: {
+        kind: "Panel",
+        spec: {
+          display: {
+            name: "Test",
+          },
+          plugin: {
+            kind: "TimeSeriesChart",
+            spec: {},
+          },
+          queries: [
             {
-              "x": 0,
-              "y": 0,
-              "width": 24,
-              "height": 7,
-              "content": {
-                "$ref": "#/spec/panels/MemoryUsagebyPod"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
+              kind: "TimeSeriesQuery",
+              spec: {
+                plugin: {
+                  kind: "PrometheusTimeSeriesQuery",
+                  spec: {
+                    datasource: {
+                      kind: "PrometheusDatasource",
+                      name: "fake-datasource",
+                    },
+                    query: "container_cpu_usage_seconds_total",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+    },
+    layouts: [
+      {
+        kind: "Grid",
+        spec: {
+          items: [
+            {
+              x: 0,
+              y: 0,
+              width: 24,
+              height: 10,
+              content: {
+                $ref: "#/spec/panels/Test",
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
 };
 
 const dashboardStoreProps: DashboardStoreProps = {
@@ -263,7 +249,6 @@ export const WorkloadPersesTab: React.FC = () => {
           >
             <QueryClientProvider client={queryClient}>
               <TimeRangeProvider
-                refreshInterval="0s"
                 timeRange={{ pastDuration: "30m" }}
               >
                 <TemplateVariableProvider>

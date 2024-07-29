@@ -7,7 +7,7 @@ export default defineConfig({
     open: true,
     proxy: {
         '/perses': {
-            target: 'https://portal.dev.entigo.dev/prometheus',
+            target: 'https://prometheus.demo.do.prometheus.io',
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/perses/, '')
         },
